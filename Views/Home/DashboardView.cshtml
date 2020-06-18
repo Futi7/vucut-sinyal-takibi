@@ -1,0 +1,278 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DashboardView</title>
+    <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
+    <link href="~/Content/vendor/fontawesome-free/css/sb-admin.css" rel="stylesheet" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+
+    <script src="https://static.fusioncharts.com/code/latest/fusioncharts.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-firestore.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+    @Scripts.Render("~/Scripts/app.js")
+    <script>
+        var viewTemp = "/hastaDurum/"+'@ViewBag.username';
+        console.log(viewTemp);
+        var db = firebase.firestore();
+        var docRef = db.collection("Hasta").doc("SF");
+        var doc = docRef.get();
+
+        var ref = firebase.database().ref(viewTemp);
+
+        window.onload = function () {
+
+            var dps = []; // dataPoints
+            var dps2 = [];
+            var chart = new CanvasJS.Chart("chartContainer", {
+                title: {
+
+                },
+                axisY: {
+                    includeZero: false
+                },
+                data: [{
+                    type: "line",
+                    dataPoints: dps
+                },
+                {
+                    type: "line",
+                    dataPoints: dps2
+                }
+
+                ]
+            });
+
+            var xVal = 0;
+            var zVal = 0;
+            var yVal = 0;
+            var updateInterval = 1000;
+            var dataLength = 20; // number of dataPoints visible at any point
+
+            var updateChart = function (count) {
+
+                count = count || 1;
+
+                for (var j = 0; j < count; j++) {
+                    ref.on("value", function (snapshot) {
+                        yVal = parseInt(snapshot.val().kalpRitmi);
+                        zVal = parseInt(snapshot.val().bodyHeat);
+                    });
+                    dps.push({
+                        x: xVal,
+                        y: yVal
+                    });
+                    dps2.push({
+                        x: xVal,
+                        y: zVal
+                    });
+                    xVal++;
+                }
+
+                if (dps.length > dataLength) {
+                    dps.shift();
+                }
+                if (dps2.length > dataLength) {
+                    dps2.shift();
+                }
+
+                chart.render();
+            };
+            updateChart(dataLength);
+            setInterval(function () { updateChart() }, updateInterval);
+        }
+    </script>
+
+</head>
+<body id="page-top">
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+        <a class="navbar-brand mr-1" href="index.html">Sinyal Takip Projesi </a>
+        <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="sidebar navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/Home/Index">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Anasayfa</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Home/About">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Hakkımızda</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Home/Contact">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>İletişim</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Security/Logout">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Çıkış</span>
+                </a>
+            </li>
+        </ul>
+        <div id="content-wrapper">
+            <div class="container-fluid">
+                <div>
+                    <!--Container-->
+                    <h2>Hasta Durum</h2>
+                    <div class="card-header">
+                        <i class="fas fa-chart-area"></i>
+                        Hasta Sinyal Durumu
+                    </div>
+                    <p style="color:dodgerblue ; font-size:50px ; float:left ; margin-left:100px">Nabız Çizelgesi-----</p>
+                    <p style="color:indianred ; font-size:50px ; margin-left:500px">Vücut Sıcaklığı Çizelgesi-----</p>
+                    <div id="chartContainer" style="height: 370px; width:100%;"></div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-3" style="margin-top:-20px;margin-right:55px"> <p id="yazitahtasi" style="font-size:125px"></div>
+                                <div class="col-md-6"> <p class="text-info" style="font-size:100px">Bpm</p></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6" style="margin-top:-20px;margin-right:55px"> <p id="yazitahtasi2" style="font-size:125px"></div>
+                                <div class="col-md-3"> <p class="text-danger" style="font-size:100px">C</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Son güncelleme şuan.</div>
+                <div class="card-header">
+                    <i class="fas fa-chart-area"></i>
+                    Adım Bilgisi
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6" style="margin-top:-20px;margin-right:100px;margin-left:auto;"> <p id="adim" style="font-size:125px"></div>
+                                <div class="col-md-3"> <p class="text-success" style="font-size:50px ; margin-top:20px ; margin-left:-125px">Adim Sayisi</p></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6" style="margin-top:-20px;margin-right:40px;margin-left:auto;"> <p id="mesafe" style="font-size:125px"></div>
+                                <div class="col-md-3"> <p class="text-info" style="font-size:50px ; margin-top:50px ; margin-left:-140px">Metre</p></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6" style="margin-top:-20px;margin-right:-80px;margin-left:auto;"> <p id="kalori" style="font-size:125px"></div>
+                        <div class="col-md-6"> <p class="text-warning" style="font-size:50px ; margin-top:50px ; margin-left:-285px">Yakılan Kalori</p></div>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Son güncelleme şuan.</div>
+                <div class="card-header">
+                    <i class="fas fa-chart-area"></i>
+                    Hasta Durumu
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12"><p id="durum" class="text-success" style="font-size:50px ; margin-top:20px; margin-left:325px;"></p></div>
+                    </div>
+                </div>
+                <div class="card-footer small text-muted">Son güncelleme şuan.</div>
+            </div>
+            <!-- /.container-fluid -->
+            <!-- Sticky Footer -->
+            <footer class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Your Website 2019</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- /.content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    @Scripts.Render("~/Scripts/jquery.min.js")
+    @Scripts.Render("~/Scripts/bootstrap.bundle.min.js")
+    @Scripts.Render("~/Scripts/jquery.easing.min.js")
+    @Scripts.Render("~/Scripts/Chart.min.js")
+    @Scripts.Render("~/Scripts/sb-admin.min.js")
+    @*@Scripts.Render("~/Scripts/fusioncharts.charts.js")
+        @Scripts.Render("~/Scripts/fusioncharts.js")*@
+
+
+    <script>
+        var viewTemp2 = "/hastaDurum/"+'@ViewBag.username';
+        var degisken='@ViewBag.username'
+        var db = firebase.firestore();
+        var docRef = db.collection("Hasta").doc(degisken);
+        var doc = docRef.get();
+
+        var ref2 = firebase.database().ref(viewTemp2);
+        var result = document.getElementById("yazitahtasi");
+        var result2 = document.getElementById("yazitahtasi2");
+
+        var adimsayisi = document.getElementById("adim");
+        var mesafe = document.getElementById("mesafe");
+        var ykalori = document.getElementById("kalori");
+
+        var durum = document.getElementById("durum");
+
+        ref2.on("value", function (snapshot) {
+            result.innerHTML = JSON.stringify(snapshot.val().kalpRitmi, null, 2).slice(1, -1);
+            result2.innerHTML = JSON.stringify(snapshot.val().bodyHeat, null, 2).slice(1, -1);
+            adimsayisi.innerHTML = JSON.stringify(snapshot.val().adimSayisi, null, 2).slice(1, -1);
+            mesafe.innerHTML = JSON.stringify(snapshot.val().mesafe, null, 2).slice(1, -1);
+            ykalori.innerHTML = JSON.stringify(snapshot.val().callories, null, 2).slice(1, -1);
+            if (Number(result.innerHTML) < 150 && Number(result2.innerHTML) < 40 && Number(result.innerHTML) > 40 && Number(result2.innerHTML) > 20) {
+                durum.innerHTML = "Vücut Sinyal Durumu Stabil"; durum.className = "text-success";
+            }
+            else {
+                durum.innerHTML = "Vücut Sinyal Durumu Kritik"; durum.className = "text-danger";
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,172 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+    <script src="https://static.fusioncharts.com/code/latest/fusioncharts.js"></script>
+    <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
+    <link href="~/Content/vendor/fontawesome-free/css/sb-admin.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="card card-register mx-auto mt-5">
+            <div class="card-header">Yeni Hasta Oluşturma</div>
+            <div class="card-body">
+                <form id="form-name" action="/Home/Index">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <div class="form-label-group">
+                                    <input type="text" id="userName" name="userName" class="form-control" placeholder="UserName" autofocus="autofocus">
+                                    <label for="userName">Username</label><br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-8">
+                                <div class="form-label-group">
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="password" autofocus="">
+                                    <label for="password">password</label><br />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <input type="text" id="firstName" name="isim" class="form-control" placeholder="First name" autofocus="">
+                                    <label for="firstName">İsim</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <input type="text" id="lastName" name="soyisim" class="form-control" placeholder="Last name">
+                                    <label for="lastName">Soyisim</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-label-group">
+                                    <input type="text" id="age" name="yas" class="form-control" placeholder="Age">
+                                    <label for="age">Yaş</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="radio-inline"><input type="radio" value="erkek" name="optradio" checked>Erkek</label>
+                                <label class="radio-inline"><input type="radio" value="kadın" name="optradio">Kadın</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="radio">
+                                Göğüs Ağrısı :
+                                <label class="radio-inline"><input type="radio" value="2" name="gogusAgrisi">Sık Sık</label>
+                                <label class="radio-inline"><input type="radio" value="1" name="gogusAgrisi" checked>Arada</label>
+                                <label class="radio-inline"><input type="radio" value="0" name="gogusAgrisi">Yok</label>
+                            </div>
+                            <div class="radio">
+                                Egzersiz Yaparken Kalp Ağrısı :
+                                <label class="radio-inline"><input type="radio" value="2" name="kalpAgrisi">Sık Sık</label>
+                                <label class="radio-inline"><input type="radio" value="1" name="kalpAgrisi" checked>Arada</label>
+                                <label class="radio-inline"><input type="radio" value="0" name="kalpAgrisi">Yok</label>
+                            </div>
+                            <div class="radio">
+                                Sigara Kullanıyor musunuz :
+                                <label class="radio-inline"><input type="radio" value="1" name="sigara" checked>Var</label>
+                                <label class="radio-inline"><input type="radio" value="0" name="sigara">Yok</label>
+                            </div>
+                            <div class="radio">
+                                Alkol Kullanıyor musunuz :
+                                <label class="radio-inline"><input type="radio" value="1" name="alkol" checked>Var</label>
+                                <label class="radio-inline"><input type="radio" value="0" name="alkol">Yok</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-info btn-md" type="submit">Kayıt Et</button>
+                    <a class="btn btn-info btn-md" href="/Security/Login">Geri Dön</a>
+                    <p id="kalpRitmi"></p>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-firestore.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyA-6vQfmode3DRV8YHz-GcMF8roWt3oZ_Y",
+            authDomain: "alzheimertakip-e1d1e.firebaseapp.com",
+            databaseURL: "https://alzheimertakip-e1d1e.firebaseio.com",
+            projectId: "alzheimertakip-e1d1e",
+            storageBucket: "alzheimertakip-e1d1e.appspot.com",
+            messagingSenderId: "1023651702254",
+            appId: "1:1023651702254:web:62f7e12aef680a5e5b5aff"
+        };
+        //Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var db = firebase.firestore();
+
+        var form = document.getElementById("form-name");
+        form.onsubmit = function (e) {
+            e.preventDefault();
+            var result = document.getElementById("yazitahtasi");
+            var username = form.userName.value;
+            var password = form.password.value;
+            var isim = form.isim.value;
+            var soyisim = form.soyisim.value;
+            var yas = form.yas.value;
+            var cinsiyet = form.optradio.value;
+            var gogusAgrisi = form.gogusAgrisi.value;
+            var kalpAgrisi = form.kalpAgrisi.value;
+            var sigara = form.sigara.value;
+            var alkol = form.alkol.value;
+            var role = "U";
+
+            db.collection("Hasta").doc(isim).set({
+                username: username,
+                password: password,
+                isim: isim,
+                soyisim: soyisim,
+                yas: yas,
+                cinsiyet: cinsiyet,
+                role: role,
+                gogusAgrisi: parseInt(gogusAgrisi, 10),
+                kalpAgrisi: parseInt(kalpAgrisi, 10),
+                sigara: parseInt(sigara, 10),
+                alkol: parseInt(alkol, 10)
+            }).then(function (docRef) {
+                window.location = '/Security/Login?username=' + username + '&password='+password;
+            });
+        };
+    </script>
+</body>
+</html>

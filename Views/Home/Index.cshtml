@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+    <div class="jumbotron">
+        <h1>Merhaba Sayın @ViewBag.username</h1>
+        <p class="lead">Aşağıdaki butondan istediğiniz işlemleri gerçekleştirebilirsiniz.</p>
+        <div class="row">
+            <p><a href="/Home/UserView" class="btn btn-primary btn-lg">Bilgilerini Görüntüle  &raquo;</a></p>
+            <div style="margin-left:2px"></div>
+            <p><a href="/Home/UserNotes" class="btn btn-primary btn-lg">Doktor Notlarını Görüntüle  &raquo;</a></p>
+            <div style="margin-left:2px"></div>
+            <p><a href="/Home/SikayetGonder" class="btn btn-danger btn-lg">Şikayet Yaz  &raquo;</a></p>
+        </div>
+    </div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Hasta Vücut Sinyalleri</h2>
+        <p>
+            Hasta vücut sinyalleri anlık olarak takip edilir.Doktor veya yapay zekanın tanısı gözükür.
+        </p>
+    </div>
+    <div class="col-md-4">
+        <h2>Kişisel Bilgileri</h2>
+        <p>Hastanın varsa sağlık problemleri alınarak üzerinde gerekli analizler yapılır ve çıkarımlarda bulunulur.</p>
+    </div>
+    <div class="col-md-4">
+        <h2>Hasta-Doktor</h2>
+        <p>Varsa şikayetlerinizi doktorla paylaşabilirsiniz ve eğer doktor sizinle paylaşılmasını düşündüğü bir durum görürse size not yollayabilir. </p>
+    </div>
+</div>

@@ -1,0 +1,149 @@
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>jsdeneme</title>
+
+    <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
+    <link href="~/Content/vendor/fontawesome-free/css/sb-admin.css" rel="stylesheet" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+
+    <script src="https://static.fusioncharts.com/code/latest/fusioncharts.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-firestore.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+    @Scripts.Render("~/Scripts/app.js")
+</head>
+<body id="page-top">
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+        <a class="navbar-brand mr-1" href="index.html">Sinyal Takip Projesi </a>
+        <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="sidebar navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/Admin/Index">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Hasta Secimi</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Admin/Sikayetler">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Gelen Sikayetler</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Security/Logout">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
+        </ul>
+        <div id="content-wrapper">
+            <div class="container-fluid">
+                <div>
+                    <!--Container-->
+                    <h2>Merhaba Sayin @ViewBag.username</h2>
+                    <div class="card-header">
+                        <i class="fas fa-chart-area"></i>
+                        Incelemek istediginiz hastayi seciniz :
+                    </div>
+                </div>
+                <div class="col-sm-6" style="margin-left:300px">
+                    <form id="select">
+                        <label for="cars" style="margin-top:40px"><h5>Hasta Secimi :</h5></label>
+                        <select name="formisim" id="formisim" class="form-control">
+
+                            <script language="javascript" type="text/javascript">
+                                var db = firebase.firestore();
+
+                                let newOption;
+                                selectBox = document.getElementById('formisim');
+                                db.collection("Hasta").get().then(function (querySnapshot) {
+                                    querySnapshot.forEach(function (doc) {
+                                        newOption = new Option(doc.id, doc.id);
+                                        selectBox.add(newOption, undefined);
+                                    });
+                                });
+
+                            </script>
+                        </select>
+                        <button type="submit" value="gönder" class="btn btn-success" style="width:40% ; margin-top:10px">goster</button>
+                    </form>
+                </div>
+
+
+            </div>
+            <!-- /.container-fluid -->
+            <!-- Sticky Footer -->
+            <footer class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Your Website 2019</span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+        <!-- /.content-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var form = document.getElementById("select");
+        form.onsubmit = function (e) {
+            e.preventDefault();
+            var hastaismi = form.formisim.value;
+
+            window.location = 'https://localhost:44365/Admin/AdminView?hastaismi=' + hastaismi;
+
+        };
+
+    </script>
+
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    @Scripts.Render("~/Scripts/jquery.min.js")
+    @Scripts.Render("~/Scripts/bootstrap.bundle.min.js")
+    @Scripts.Render("~/Scripts/jquery.easing.min.js")
+    @Scripts.Render("~/Scripts/Chart.min.js")
+    @Scripts.Render("~/Scripts/sb-admin.min.js")
+    @*@Scripts.Render("~/Scripts/fusioncharts.charts.js")
+        @Scripts.Render("~/Scripts/fusioncharts.js")*@
+</body>
+</html>

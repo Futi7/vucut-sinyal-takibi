@@ -1,0 +1,158 @@
+﻿@{
+    Layout = null;
+}
+
+
+<html>
+<head>
+    <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
+    <link href="~/Content/vendor/fontawesome-free/css/sb-admin.css" rel="stylesheet" />
+
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+
+
+
+</head>
+
+<body id="page-top">
+
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+
+        <a class="navbar-brand mr-1" href="index.html">Sinyal Takip Projesi </a>
+
+        <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+            <i class="fas fa-bars"></i>
+        </button>
+
+
+
+
+    </nav>
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="sidebar navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/Home/Index">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Anasayfa</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Home/About">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Hakkımızda</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Home/Contact">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>İletişim</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Security/Logout">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Çıkış</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div id="content-wrapper">
+            <p><a href="/Home/Index" class="btn btn-primary btn-lg">Geri Dön</a></p>
+            <div class="container-fluid">
+
+                <table id="example" class="display" width="100%"></table>
+
+            </div>
+            <!-- /.container-fluid -->
+            <!-- Sticky Footer -->
+            <footer class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright © Your Website 2019</span>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+        <!-- /.content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+function getDatainTable() {
+    var firebaseConfig = {
+            apiKey: "AIzaSyA-6vQfmode3DRV8YHz-GcMF8roWt3oZ_Y",
+            authDomain: "alzheimertakip-e1d1e.firebaseapp.com",
+            databaseURL: "https://alzheimertakip-e1d1e.firebaseio.com/",
+            projectId: "alzheimertakip-e1d1e",
+            storageBucket: "alzheimertakip-e1d1e.appspot.com",
+            messagingSenderId: "1023651702254",
+            appId: "1:1023651702254:web:62f7e12aef680a5e5b5aff"
+        };
+    firebase.initializeApp(firebaseConfig);
+    let db = firebase.firestore();
+    var dataSet = new Array();
+    var degisken = '@ViewBag.user';
+    db.collection("Notes").where("username","==", degisken).get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                    dataSet.push(["Doktor Yusuf", doc.data().note]);
+});
+    $('#example').DataTable( {
+            data: dataSet,
+            columns: [
+                    { title: "Kimden" },
+                    { title: "Notes" }
+            ]
+    } );
+    });
+}
+$(document).ready(function(){
+    getDatainTable();
+
+});
+    </script>
+
+
+    @Scripts.Render("~/Scripts/bootstrap.bundle.min.js")
+    
+    @Scripts.Render("~/Scripts/sb-admin.min.js")
+   
+</body>
+</html>

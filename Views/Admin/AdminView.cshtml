@@ -1,0 +1,250 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DashboardView</title>
+    <link href="~/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet" />
+    <link href="~/Content/vendor/fontawesome-free/css/sb-admin.css" rel="stylesheet" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+
+    <script src="https://static.fusioncharts.com/code/latest/fusioncharts.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-firestore.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-database.js"></script>
+    @Scripts.Render("~/Scripts/app.js")
+
+
+</head>
+<body id="page-top">
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+        <a class="navbar-brand mr-1" href="index.html">Sinyal Takip Projesi </a>
+        <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="sidebar navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/Admin/Index">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Hasta Secimi</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Admin/Sikayetler">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Gelen Şikayetler</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/Security/Logout">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Çıkış</span>
+                </a>
+            </li>
+        </ul>
+        <div id="content-wrapper">
+            <div class="container-fluid">
+                <div>
+                    <!--Container-->
+                    <h2>Hasta Durum</h2>
+                    <div class="card-header">
+                        <i class="fas fa-chart-area"></i>
+                        Hasta Kayıt Bilgileri
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">İsim :</th>
+                                <td id="isim"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Soyisim :</th>
+                                <td id="soyisim"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Cinsiyet :</th>
+                                <td id="cinsiyet"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Yaş :</th>
+                                <td id="yas"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Sigara :</th>
+                                <td id="sigara"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Alkol :</th>
+                                <td id="alkol"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Göğüs ağrısı Yaşıyor mu :</th>
+                                <td id="gogusagrisi"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Kalp ağrısı Yaşıyor mu :</th>
+                                <td id="kalpagrisi"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button onclick="buttonClick()" type="button" class="btn btn-primary btn-lg" style="width:60%;">Hastanın Verilerini Canlı Izle</button>
+                    <button onclick="buttonClick2()" type="button" class="btn btn-success btn-lg" style="width:37%;">Hastaya Not Gönder</button>
+                </div>
+                <!-- /.container-fluid -->
+                <!-- Sticky Footer -->
+                <footer class="sticky-footer">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright © Your Website 2019</span>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+            <!-- /.content-wrapper -->
+        </div>
+        <!-- /#wrapper -->
+        <!-- Scroll to Top Button-->
+        <a class="scroll-to-top rounded" href="#page-top">
+            <i class="fas fa-angle-up"></i>
+        </a>
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="login.html">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+        @Scripts.Render("~/Scripts/jquery.min.js")
+        @Scripts.Render("~/Scripts/bootstrap.bundle.min.js")
+        @Scripts.Render("~/Scripts/jquery.easing.min.js")
+        @Scripts.Render("~/Scripts/Chart.min.js")
+        @Scripts.Render("~/Scripts/sb-admin.min.js")
+        @*@Scripts.Render("~/Scripts/fusioncharts.charts.js")
+            @Scripts.Render("~/Scripts/fusioncharts.js")*@
+
+        <script>
+        var flag= '@ViewBag.username';
+        var db = firebase.firestore();
+
+        var username = document.getElementById("username");
+        var password = document.getElementById("password");
+        var role = document.getElementById("role");
+
+        var yas = document.getElementById("yas");
+        var cinsiyet = document.getElementById("cinsiyet");
+        var isim = document.getElementById("isim");
+        var soyisim = document.getElementById("soyisim");
+        var kalpagrisi = document.getElementById("kalpagrisi");
+        var gogusagrisi = document.getElementById("gogusagrisi");
+        var sigara = document.getElementById("sigara");
+        var alkol = document.getElementById("alkol");
+
+
+
+        var docRef = db.collection("Hasta").doc(flag);
+        var isimforroute
+docRef.get().then(function(doc) {
+    if (doc.exists) {
+        yas.innerHTML = doc.data().yas;
+        isimforroute=doc.data().isim;
+        isim.innerHTML= doc.data().isim;
+        soyisim.innerHTML = doc.data().soyisim;
+        cinsiyet.innerHTML = doc.data().cinsiyet;
+
+        var kalpagrisiTemp = doc.data().kalpAgrisi;
+         if (kalpagrisiTemp == 2) {
+            kalpagrisiTemp = "Sık Sık";
+        }
+        else if (kalpagrisiTemp == 1) {
+            kalpagrisiTemp = "Arada";
+        }
+        else {
+            kalpagrisiTemp = "Yok";
+        }
+        kalpagrisi.innerHTML = kalpagrisiTemp;
+
+        var gogusagrisiTemp = doc.data().gogusAgrisi;
+          if (gogusagrisiTemp == 2) {
+            gogusagrisiTemp = "Sık Sık";
+        }
+        else if (gogusagrisiTemp == 1) {
+            gogusagrisiTemp = "Arada";
+        }
+        else {
+            gogusagrisiTemp = "Yok";
+        }
+        gogusagrisi.innerHTML = gogusagrisiTemp;
+
+        var sigaraTemp=doc.data().sigara;
+          if (sigaraTemp == 1) {
+                sigaraTemp = "Kullanıyor";
+        }
+        else if (sigaraTemp == 0) {
+            sigaraTemp = "Kullanmıyor";
+        }
+        sigara.innerHTML = sigaraTemp;
+
+        var alkolTemp=doc.data().alkol;
+          if (alkolTemp == 1) {
+                alkolTemp = "Kullanıyor";
+        }
+        else if (alkolTemp == 0) {
+            alkolTemp = "Kullanmıyor";
+        }
+        alkol.innerHTML = alkolTemp;
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+    }
+}).catch(function(error) {
+    console.log("Error getting document:", error);
+});
+
+
+    function buttonClick() {
+        window.location = '/Admin/AdminDashboardView?hastaismi=' + isimforroute;
+                }
+    function buttonClick2() {
+        window.location = '/Admin/SendNote?hastaismi=' + isimforroute;
+    }
+
+
+        </script>
+
+</body>
+</html>
+
+
+

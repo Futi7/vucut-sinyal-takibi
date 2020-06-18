@@ -1,0 +1,143 @@
+﻿
+@{
+    ViewBag.Title = "UserView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div>
+        <p><a href="/Home/Index" class="btn btn-primary btn-lg">Geri Dön </a></p>
+        <!--Container-->
+        <h2>Hasta Durum</h2>
+        <div class="card-header">
+            <i class="fas fa-chart-area"></i>
+            Hasta Kayıt Bilgileri
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">İsim :</th>
+                    <td id="isim"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Soyisim :</th>
+                    <td id="soyisim"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Cinsiyet :</th>
+                    <td id="cinsiyet"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Yaş :</th>
+                    <td id="yas"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Sigara :</th>
+                    <td id="sigara"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Alkol :</th>
+                    <td id="alkol"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Göğüs ağrısı Yaşıyor mu :</th>
+                    <td id="gogusagrisi"></td>
+                </tr>
+                <tr>
+                    <th scope="row">Kalp ağrısı Yaşıyor mu :</th>
+                    <td id="kalpagrisi"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button onclick="buttonClick()" type="button" class="btn btn-warning btn-lg" style="width:40%;">Verilerimi Güncelle</button>
+        <a href="/Home/DashboardView"><button type="button" class="btn btn-info btn-lg" style="width:40%;">Verilerimi Canlı İzle</button></a>
+    </div>
+
+    <script>
+        var flag= '@ViewBag.username';
+        var db = firebase.firestore();
+
+       
+
+        var yas = document.getElementById("yas");
+        var cinsiyet = document.getElementById("cinsiyet");
+        var isim = document.getElementById("isim");
+        var soyisim = document.getElementById("soyisim");
+        var kalpagrisi = document.getElementById("kalpagrisi");
+        var gogusagrisi = document.getElementById("gogusagrisi");
+        var sigara = document.getElementById("sigara");
+        var alkol = document.getElementById("alkol");
+
+
+
+        var docRef = db.collection("Hasta").doc(flag);
+        var isimforroute
+docRef.get().then(function(doc) {
+    if (doc.exists) {
+        yas.innerHTML = doc.data().yas;
+        isimforroute=doc.data().isim;
+        isim.innerHTML= doc.data().isim;
+        soyisim.innerHTML = doc.data().soyisim;
+        cinsiyet.innerHTML = doc.data().cinsiyet;
+
+        var kalpagrisiTemp = doc.data().kalpAgrisi;
+         if (kalpagrisiTemp == 2) {
+            kalpagrisiTemp = "Sık Sık";
+        }
+        else if (kalpagrisiTemp == 1) {
+            kalpagrisiTemp = "Arada";
+        }
+        else {
+            kalpagrisiTemp = "Yok";
+        }
+        kalpagrisi.innerHTML = kalpagrisiTemp;
+
+        var gogusagrisiTemp = doc.data().gogusAgrisi;
+          if (gogusagrisiTemp == 2) {
+            gogusagrisiTemp = "Sık Sık";
+        }
+        else if (gogusagrisiTemp == 1) {
+            gogusagrisiTemp = "Arada";
+        }
+        else {
+            gogusagrisiTemp = "Yok";
+        }
+        gogusagrisi.innerHTML = gogusagrisiTemp;
+
+        var sigaraTemp=doc.data().sigara;
+          if (sigaraTemp == 1) {
+                sigaraTemp = "Kullanıyor";
+        }
+        else if (sigaraTemp == 0) {
+            sigaraTemp = "Kullanmıyor";
+        }
+        sigara.innerHTML = sigaraTemp;
+
+        var alkolTemp=doc.data().alkol;
+          if (alkolTemp == 1) {
+                alkolTemp = "Kullanıyor";
+        }
+        else if (alkolTemp == 0) {
+            alkolTemp = "Kullanmıyor";
+        }
+        alkol.innerHTML = alkolTemp;
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+    }
+}).catch(function(error) {
+    console.log("Error getting document:", error);
+});
+
+
+    function buttonClick() {
+        window.location = '/Home/UserUpdate?hastaismi';
+    }
+
+
+    </script>
